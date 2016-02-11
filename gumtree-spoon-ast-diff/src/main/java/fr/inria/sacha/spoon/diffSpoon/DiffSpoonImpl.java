@@ -303,9 +303,15 @@ public class DiffSpoonImpl implements DiffSpoon {
 		File f1 = new File(args[0]);
 		File f2 = new File(args[1]);
 
-		DiffSpoonImpl ds = new DiffSpoonImpl();
-		CtDiffImpl result = ds.compare(f1, f2);
-		System.out.println(result.toString());
+		if (f1.getPath().equals("/dev/null")) {
+
+		} else if (f2.getPath().equals("/dev/null")) {
+
+		} else {
+			DiffSpoonImpl ds = new DiffSpoonImpl();
+			CtDiffImpl result = ds.compare(f1, f2);
+			System.out.println(result.toString());
+		}
 	}
 
 	public static String readFile(File f) throws IOException {
