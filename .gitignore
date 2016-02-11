@@ -3,3 +3,4 @@ gumtree-spoon-ast-diff/target/*
 gumtree-spoon-ast-diff/.*
 repositories/*
 *.out
+runDiff.sh
