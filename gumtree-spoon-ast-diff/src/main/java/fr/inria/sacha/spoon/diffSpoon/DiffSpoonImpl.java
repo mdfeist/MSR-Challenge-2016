@@ -303,12 +303,19 @@ public class DiffSpoonImpl implements DiffSpoon {
 		File f1 = new File(args[0]);
 		File f2 = new File(args[1]);
 
+
+		DiffSpoonImpl ds = new DiffSpoonImpl();
 		if (f1.getPath().equals("/dev/null")) {
-
+			// File deleted and ignore
 		} else if (f2.getPath().equals("/dev/null")) {
-
+			// File added
+			System.out.println("AST DIFF: NEW FILE");
+			System.out.println(f1.getPath());
+			CtType<?> clazz1 = ds.getCtClass(f1);
+			ITree rootSpoon = ds.getTree(clazz1);
+			System.out.println(ds.printTree(":", rootSpoon));
 		} else {
-			DiffSpoonImpl ds = new DiffSpoonImpl();
+			// File Changed
 			CtDiffImpl result = ds.compare(f1, f2);
 			System.out.println(result.toString());
 		}
