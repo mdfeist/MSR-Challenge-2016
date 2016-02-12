@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DIRECTORY="repositories"
+DIRECTORY="repositories_100"
 NUMBER=100
 
 # Read all repositories from BOA output

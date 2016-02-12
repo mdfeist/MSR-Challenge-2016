@@ -333,26 +333,30 @@ public class DiffSpoonImpl implements DiffSpoon {
 
 	public static void main(String[] args) throws Exception {
 
-		if (args.length != 2) {
-			System.out.println("Usage: DiffSpoon <file_1>  <file_2>");
+		if (args.length != 3) {
+			System.out.println("Usage: DiffSpoon <cmp:one> <file_1>  <file_2>");
 			return;
 		}
 
-		File f1 = new File(args[0]);
-		File f2 = new File(args[1]);
+		File f1 = new File(args[1]);
+		File f2 = new File(args[2]);
 
 		DiffSpoonImpl ds = new DiffSpoonImpl();
-		if (f1.getPath().equals("/dev/null")) {
-			// File deleted and ignore
-		} else if (f2.getPath().equals("/dev/null")) {
-			// File added
+		if (f1.getPath().equals("/dev/null") && args[0].equals("one")) {
 			System.out.println("AST DIFF: NEW FILE");
-			System.out.println(f1.getPath());
-			CtType<?> clazz1 = ds.getCtClass(f1);
-			ITree rootSpoon = ds.getTree(clazz1);
+			System.out.println(f2.getPath());
+			CtType<?> clazz = ds.getCtClass(f2);
+			ITree rootSpoon = ds.getTree(clazz);
 			//System.out.println(ds.treeStats(rootSpoon));
 			System.out.println(ds.printTree(":", rootSpoon));
-		} else {
+		} else if (f2.getPath().equals("/dev/null") && args[0].equals("cmp")) {
+			System.out.println("AST DIFF: NEW FILE");
+			System.out.println(f1.getPath());
+			CtType<?> clazz = ds.getCtClass(f1);
+			ITree rootSpoon = ds.getTree(clazz);
+			//System.out.println(ds.treeStats(rootSpoon));
+			System.out.println(ds.printTree(":", rootSpoon));
+		} else if (args[0].equals("cmp")) {
 			// File Changed
 			//CtDiffImpl result = ds.compare(f1, f2);
 			//System.out.println(result.toString());
