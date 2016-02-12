@@ -274,7 +274,9 @@ public class DiffSpoonImpl implements DiffSpoon {
 	public String printTree(String tab, ITree t) {
 
 		StringBuffer b = new StringBuffer();
-		b.append(t.getType() + ":" + t.getLabel() + " \n");
+		String type = scanner.getTypeLabel(t.getType());
+		if (type == null) type = "null";
+		b.append(type + ":" + t.getLabel() + " \n");
 		Iterator<ITree> cIt = t.getChildren().iterator();
 		while (cIt.hasNext()) {
 			ITree c = cIt.next();
@@ -284,6 +286,21 @@ public class DiffSpoonImpl implements DiffSpoon {
 		// b.append(")");
 		return b.toString();
 
+	}
+
+	public String treeStats(ITree t) {
+		StringBuffer b = new StringBuffer();
+		String type = scanner.getTypeLabel(t.getType());
+		if (type == null) type = "null";
+		if (type.equals("StaticType"))
+			b.append(t.getLabel() + " \n");
+		Iterator<ITree> cIt = t.getChildren().iterator();
+		while (cIt.hasNext()) {
+			ITree c = cIt.next();
+			b.append(treeStats(c));
+		}
+		return b.toString();
+		
 	}
 
 	public void prepare(ITree node) {
@@ -303,7 +320,6 @@ public class DiffSpoonImpl implements DiffSpoon {
 		File f1 = new File(args[0]);
 		File f2 = new File(args[1]);
 
-
 		DiffSpoonImpl ds = new DiffSpoonImpl();
 		if (f1.getPath().equals("/dev/null")) {
 			// File deleted and ignore
@@ -313,11 +329,12 @@ public class DiffSpoonImpl implements DiffSpoon {
 			System.out.println(f1.getPath());
 			CtType<?> clazz1 = ds.getCtClass(f1);
 			ITree rootSpoon = ds.getTree(clazz1);
+			//System.out.println(ds.treeStats(rootSpoon));
 			System.out.println(ds.printTree(":", rootSpoon));
 		} else {
 			// File Changed
-			CtDiffImpl result = ds.compare(f1, f2);
-			System.out.println(result.toString());
+			//CtDiffImpl result = ds.compare(f1, f2);
+			//System.out.println(result.toString());
 		}
 	}
 

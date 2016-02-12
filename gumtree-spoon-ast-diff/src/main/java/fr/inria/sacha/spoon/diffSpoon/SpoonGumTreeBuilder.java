@@ -64,6 +64,7 @@ public class SpoonGumTreeBuilder extends CtScanner {
 
 	public static List<String> typesId = new ArrayList<String>();
 
+	public TreeContext gtContext = new TreeContext();
 	
 	public SpoonGumTreeBuilder() {
 		super();
@@ -173,8 +174,14 @@ public class SpoonGumTreeBuilder extends CtScanner {
 		
 		return simpleName.substring(2, simpleName.length()-4);
 	}
-	
-	TreeContext gtContext = new TreeContext();
+
+	public String getTypeLabel(ITree type) {
+		return gtContext.getTypeLabel(type);
+	}
+
+	public String getTypeLabel(int type) {
+		return gtContext.getTypeLabel(type);
+	}
 
 	private ITree createNode(String label, String typeLabel) {
 		int typeId = resolveTypeId(typeLabel);

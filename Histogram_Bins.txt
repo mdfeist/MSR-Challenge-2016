@@ -1,0 +1,17 @@
+Try
+Do
+While
+For
+ForEach
+
+staticType:
+Invocation:
+	android
+
+	java.awt
+	java.io
+	java.net
+	java.lang
+	java.util
+
+	javax.swing
