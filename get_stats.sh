@@ -10,20 +10,26 @@ for d in */ ; do
 
 	last="0"
 
-	git log --reverse --format="%H" | while read commit
+	git log --reverse --format="%H %an" | while read line
 	do
 		#echo "$commit"
+		stringarray=($line)
 
-		echo "===================================================================================="
+		commit=${stringarray[0]}
+		author=${stringarray[1]}
+
+		echo "#COMMIT_START"
+		echo "#AUTHOR | $author"
+		
 		if [ "$last" != "0" ]
 		then
-			echo "Diff: $last $commit"
+			echo "#COMMIT | $commit $last"
 			git difftool -y --tool=gumtree_cmp $commit $last
 		else
-			echo "Diff: $commit"
+			echo "#COMMIT | $commit"
 			git difftool -y --tool=gumtree $commit
 		fi
-		echo "===================================================================================="
+		echo "#COMMIT_END"
 
 		last="$commit"
 	done

@@ -86,19 +86,17 @@ public class DiffSpoonImpl implements DiffSpoon {
 	}
 
 	public void printStats() {
-		System.out.println("#STATS_START");
-
 		System.out.print("#HISTOGRAM |");
 
 		for (String key : hist.keySet()) {
-		    System.out.format("%12s", key);
+		    System.out.format("%12s |", key);
 		}
 		System.out.println();
 
 		System.out.print("#HISTOGRAM |");
 
 		for (Integer value : hist.values()) {
-		    System.out.format("%12d", value);
+		    System.out.format("%12d |", value);
 		}
 
 		System.out.println();
@@ -109,8 +107,6 @@ public class DiffSpoonImpl implements DiffSpoon {
 
 		    System.out.println("#LIB | " + key + " | " + value);
 		}
-
-		System.out.println("#STATS_END");
 	}
 
 	private void initHist() {
@@ -468,14 +464,14 @@ public class DiffSpoonImpl implements DiffSpoon {
 		File f2 = new File(args[2]);
 
 		DiffSpoonImpl ds = new DiffSpoonImpl();
-		if (f1.getPath().equals("/dev/null") && args[0].equals("one")) {
+		if (!f1.getPath().contains(".java") && args[0].equals("one")) {
 			System.out.println("AST DIFF: NEW FILE");
 			System.out.println(f2.getPath());
 			CtType<?> clazz = ds.getCtClass(f2);
 			ITree rootSpoon = ds.getTree(clazz);
 			ds.treeStats(rootSpoon);
 			//System.out.println(ds.printTree(":", rootSpoon));
-		} else if (f2.getPath().equals("/dev/null") && args[0].equals("cmp")) {
+		} else if (!f2.getPath().contains(".java") && args[0].equals("cmp")) {
 			System.out.println("AST DIFF: NEW FILE");
 			System.out.println(f1.getPath());
 			CtType<?> clazz = ds.getCtClass(f1);
@@ -484,7 +480,14 @@ public class DiffSpoonImpl implements DiffSpoon {
 			//System.out.println(ds.printTree(":", rootSpoon));
 		} else if (args[0].equals("cmp")) {
 			// File Changed
-			//CtDiffImpl result = ds.compare(f1, f2);
+			CtDiffImpl result = ds.compare(f1, f2);
+			for (Action action : result.getRootActions()) {
+				String actionType = action.getClass().getSimpleName();
+				if (actionType.equals("Update") || actionType.equals("Insert"))
+				{
+					ds.treeStats(action.getNode());
+				}
+			}
 			//System.out.println(result.toString());
 		}
 

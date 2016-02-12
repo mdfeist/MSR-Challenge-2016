@@ -1,7 +1,7 @@
 #!/bin/bash
 
-DIRECTORY="repositories_100"
-NUMBER=100
+DIRECTORY="repositories_1000"
+NUMBER=1000
 
 # Read all repositories from BOA output
 ALL_GITHUB_REPOS=()
