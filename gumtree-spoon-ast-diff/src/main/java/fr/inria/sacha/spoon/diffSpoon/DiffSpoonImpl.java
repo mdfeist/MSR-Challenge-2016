@@ -21,6 +21,7 @@ import spoon.reflect.declaration.CtElement;
 import spoon.reflect.declaration.CtType;
 import spoon.reflect.factory.Factory;
 import spoon.reflect.factory.FactoryImpl;
+import spoon.reflect.reference.CtTypeReference;
 import spoon.support.DefaultCoreFactory;
 import spoon.support.StandardEnvironment;
 import spoon.support.compiler.VirtualFile;
@@ -276,7 +277,27 @@ public class DiffSpoonImpl implements DiffSpoon {
 		StringBuffer b = new StringBuffer();
 		String type = scanner.getTypeLabel(t.getType());
 		if (type == null) type = "null";
-		b.append(type + ":" + t.getLabel() + " \n");
+
+		String out = type + ":" + t.getLabel();
+
+		if (type.equals("Class")) {
+			CtElement el = null;
+			el = (CtElement) t.getMetadata(SpoonGumTreeBuilder.SPOON_OBJECT);
+			CtClass<?> clazz = (CtClass<?>)el;
+
+			CtTypeReference<?> superClass = clazz.getSuperclass();
+			if (superClass != null)
+				out += ":e:" + superClass.getSimpleName();
+
+			Set<CtTypeReference<?>> interfaces = clazz.getSuperInterfaces();
+			Iterator<CtTypeReference<?>> itr = interfaces.iterator();
+			while(itr.hasNext()) {
+				CtTypeReference<?> superInterface = itr.next();
+				out += ":i:" + superInterface.getSimpleName();
+			}
+		}
+
+		b.append(out + " \n");
 		Iterator<ITree> cIt = t.getChildren().iterator();
 		while (cIt.hasNext()) {
 			ITree c = cIt.next();
