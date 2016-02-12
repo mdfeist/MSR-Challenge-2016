@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -27,6 +28,7 @@ import spoon.support.StandardEnvironment;
 import spoon.support.compiler.VirtualFile;
 import spoon.support.compiler.jdt.JDTBasedSpoonCompiler;
 import spoon.support.compiler.jdt.JDTSnippetCompiler;
+import spoon.support.reflect.declaration.CtFieldImpl;
 
 import com.github.gumtreediff.actions.ActionGenerator;
 import com.github.gumtreediff.actions.model.Action;
@@ -48,6 +50,8 @@ public class DiffSpoonImpl implements DiffSpoon {
 	public static final Logger logger = Logger.getLogger(DiffSpoonImpl.class);
 	protected Factory factory = null;
 	private SpoonGumTreeBuilder scanner = new SpoonGumTreeBuilder();
+	private HashMap<String,Integer> libs = new HashMap<String,Integer>();
+	private HashMap<String,Integer> hist = new HashMap<String,Integer>();
 
 	static {
 			// default 0.3
@@ -81,10 +85,59 @@ public class DiffSpoonImpl implements DiffSpoon {
 		factory.getEnvironment().setNoClasspath(noClasspath);
 	}
 
+	public void printStats() {
+		System.out.println("#STATS_START");
+
+		System.out.print("#HISTOGRAM |");
+
+		for (String key : hist.keySet()) {
+		    System.out.format("%12s", key);
+		}
+		System.out.println();
+
+		System.out.print("#HISTOGRAM |");
+
+		for (Integer value : hist.values()) {
+		    System.out.format("%12d", value);
+		}
+
+		System.out.println();
+
+		for (HashMap.Entry<String, Integer> entry : libs.entrySet()) {
+		    String key = entry.getKey();
+		    Integer value = entry.getValue();
+
+		    System.out.println("#LIB | " + key + " | " + value);
+		}
+
+		System.out.println("#STATS_END");
+	}
+
+	private void initHist() {
+		hist.put("If", 0);
+		hist.put("Try", 0);
+		hist.put("Catch", 0);
+		hist.put("Do", 0);
+		hist.put("While", 0);
+		hist.put("For", 0);
+		hist.put("ForEach", 0);
+		hist.put("Generic", 0);
+		hist.put("Class",0);
+		hist.put("Inheritance", 0);
+		hist.put("Interface", 0);
+	}
+
+	private void increment(HashMap<String,Integer> map, String key) {
+		int count = map.containsKey(key) ? map.get(key) : 0;
+		map.put(key, count + 1);
+	}
+
 	public DiffSpoonImpl(Factory factory) {
 		this.factory = factory;
 		logger.setLevel(Level.DEBUG);
 		factory.getEnvironment().setNoClasspath(true);
+
+		initHist();
 	}
 
 	public DiffSpoonImpl() {
@@ -92,6 +145,8 @@ public class DiffSpoonImpl implements DiffSpoon {
 				new StandardEnvironment());
 		logger.setLevel(Level.DEBUG);
 		factory.getEnvironment().setNoClasspath(true);
+
+		initHist();
 	}
 
 	@Deprecated
@@ -295,6 +350,20 @@ public class DiffSpoonImpl implements DiffSpoon {
 				CtTypeReference<?> superInterface = itr.next();
 				out += ":i:" + superInterface.getSimpleName();
 			}
+		} else if (type.equals("StaticType")) {
+			CtElement el = null;
+			el = (CtElement) t.getMetadata(SpoonGumTreeBuilder.SPOON_OBJECT);
+			if (el instanceof CtFieldImpl) {
+				CtFieldImpl field = (CtFieldImpl)el;
+				CtTypeReference<?> typeVar = field.getType();
+				if(!typeVar.isPrimitive() && typeVar.toString().contains("<") && typeVar.toString().contains(">")) {
+					String types = typeVar.toString();
+					types = types.replaceAll(".*<", "").replaceAll(">", "").replaceAll(" ", "");
+					String[] splited = types.split(",");
+					for (String tsplit : splited)
+						out += ":" + tsplit;
+				}
+			}
 		}
 
 		b.append(out + " \n");
@@ -309,18 +378,75 @@ public class DiffSpoonImpl implements DiffSpoon {
 
 	}
 
-	public String treeStats(ITree t) {
-		StringBuffer b = new StringBuffer();
+	public void treeStats(ITree t) {
 		String type = scanner.getTypeLabel(t.getType());
 		if (type == null) type = "null";
-		if (type.equals("StaticType"))
-			b.append(t.getLabel() + " \n");
+		
+		if (type.equals("Class")) {
+			increment(hist, type);
+
+			// Get Class
+			CtElement el = null;
+			el = (CtElement) t.getMetadata(SpoonGumTreeBuilder.SPOON_OBJECT);
+			CtClass<?> clazz = (CtClass<?>)el;
+
+			// Has super class
+			CtTypeReference<?> superClass = clazz.getSuperclass();
+			if (superClass != null) {
+				increment(hist, "Inheritance");
+			}
+
+			// Has interface
+			Set<CtTypeReference<?>> interfaces = clazz.getSuperInterfaces();
+			Iterator<CtTypeReference<?>> itr = interfaces.iterator();
+			while(itr.hasNext()) {
+				CtTypeReference<?> superInterface = itr.next();
+				increment(hist, "Interface");
+			}
+		} else if (type.equals("StaticType")) {
+			increment(libs, t.getLabel());
+
+			CtElement el = null;
+			el = (CtElement) t.getMetadata(SpoonGumTreeBuilder.SPOON_OBJECT);
+			if (el instanceof CtFieldImpl) {
+				CtFieldImpl field = (CtFieldImpl)el;
+				CtTypeReference<?> typeVar = field.getType();
+
+				// Check if generic
+				if(!typeVar.isPrimitive() && typeVar.toString().contains("<") && typeVar.toString().contains(">")) {
+					increment(hist, "Generic");
+
+					// Get generic types
+					String types = typeVar.toString();
+					types = types.replaceAll(".*<", "").replaceAll(">", "").replaceAll(" ", "");
+					String[] splited = types.split(",");
+					for (String tsplit : splited) {
+						increment(libs, tsplit);
+					}
+				}
+			}
+		} else if (type.equals("If")) {
+			increment(hist, type);
+		} else if (type.equals("Try")) {
+			increment(hist, type);
+		} else if (type.equals("Catch")) {
+			increment(hist, type);
+		} else if (type.equals("Do")) {
+			increment(hist, type);
+		} else if (type.equals("While")) {
+			increment(hist, type);
+		} else if (type.equals("For")) {
+			increment(hist, type);
+		}  else if (type.equals("ForEach")) {
+			increment(hist, type);
+		}
+
+
 		Iterator<ITree> cIt = t.getChildren().iterator();
 		while (cIt.hasNext()) {
 			ITree c = cIt.next();
-			b.append(treeStats(c));
+			treeStats(c);
 		}
-		return b.toString();
 		
 	}
 
@@ -347,20 +473,22 @@ public class DiffSpoonImpl implements DiffSpoon {
 			System.out.println(f2.getPath());
 			CtType<?> clazz = ds.getCtClass(f2);
 			ITree rootSpoon = ds.getTree(clazz);
-			//System.out.println(ds.treeStats(rootSpoon));
-			System.out.println(ds.printTree(":", rootSpoon));
+			ds.treeStats(rootSpoon);
+			//System.out.println(ds.printTree(":", rootSpoon));
 		} else if (f2.getPath().equals("/dev/null") && args[0].equals("cmp")) {
 			System.out.println("AST DIFF: NEW FILE");
 			System.out.println(f1.getPath());
 			CtType<?> clazz = ds.getCtClass(f1);
 			ITree rootSpoon = ds.getTree(clazz);
-			//System.out.println(ds.treeStats(rootSpoon));
-			System.out.println(ds.printTree(":", rootSpoon));
+			ds.treeStats(rootSpoon);
+			//System.out.println(ds.printTree(":", rootSpoon));
 		} else if (args[0].equals("cmp")) {
 			// File Changed
 			//CtDiffImpl result = ds.compare(f1, f2);
 			//System.out.println(result.toString());
 		}
+
+		ds.printStats();
 	}
 
 	public static String readFile(File f) throws IOException {

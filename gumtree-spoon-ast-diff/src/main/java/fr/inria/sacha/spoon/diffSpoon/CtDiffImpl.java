@@ -17,8 +17,6 @@ import com.github.gumtreediff.matchers.MappingStore;
 import com.github.gumtreediff.tree.ITree;
 
 
-
-
 /**
  * 
  * @author  Matias Martinez, matias.martinez@inria.fr
