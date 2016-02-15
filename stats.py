@@ -1,4 +1,5 @@
 import sys
+import os
 from sets import Set
 
 projects = []
@@ -21,8 +22,9 @@ class Project:
         return self._commits
 
     def getStats(self):
-        output = self._dir
-
+        dump = self._dir
+        histogram_csv = "Author, Do, For, Inheritance, Generic, Try, Catch, While, ForEach, Interface, Class, If, \n"
+        histogram_stats_csv = "Author, Generic, Catch/Try, Try/If, Inheritance/Class, Interface/Class, \n"
         libs = Set()
         author_names = Set()
         authors = {}
@@ -36,6 +38,7 @@ class Project:
                 for lib in f.getLibs().getHist():
                     libs.add(lib)
 
+        # Create authors and set up lib histogram
         for author in author_names:
             authors[author] = Author()
             authors[author].setName(author)
@@ -45,6 +48,7 @@ class Project:
             for lib in libs:
                 author_libs.add(lib, 0)
 
+        # Get libs and histogram for each author
         for commit in self._commits:
             name = commit.getAuthor()
             author = authors[name]
@@ -55,14 +59,52 @@ class Project:
                 for lib, count in f.getLibs().getHist().items():
                     author.getLibs().add(lib, count)
 
+        # Get Stats
+
+        # Get dump of authors
         for key, author in authors.items():
-            output += author.toStr("\t")
+            # Get dump for author
+            dump += author.toStr("\t")
 
+            # Get Histogram and stats
+            hist = author.getHistogram().getHist()
 
-        return output
+            histogram_csv += author.getName() + ", "
+            histogram_stats_csv += author.getName() + ", "
 
-        #print(libs)
+            if len(hist) < 1:
+                histogram_csv += "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,"
+                histogram_stats_csv += "0, 0, 0, 0, 0,"
+            else:
+                for value in hist.itervalues():
+                    histogram_csv += str(value) + ", "
 
+                histogram_stats_csv += str(hist["Generic"]) + ", "
+                
+                if hist["Try"] == 0:
+                    histogram_stats_csv += "0, "
+                else:
+                    histogram_stats_csv += str(hist["Catch"]/float(hist["Try"])) + ", "
+                
+                if hist["If"] == 0:
+                    histogram_stats_csv += "0, "
+                else:
+                    histogram_stats_csv += str(hist["Try"]/float(hist["If"])) + ", "
+                
+                if hist["Class"] == 0:
+                    histogram_stats_csv += "0, "
+                else:
+                    histogram_stats_csv += str(hist["Inheritance"]/float(hist["Class"])) + ", "
+                
+                if hist["Class"] == 0:
+                    histogram_stats_csv += "0, "
+                else:
+                    histogram_stats_csv += str(hist["Interface"]/float(hist["Class"])) + ", "
+
+            histogram_csv += "\n"
+            histogram_stats_csv += "\n"
+
+        return (dump, histogram_csv, histogram_stats_csv)
 
     def __str__(self):
         output = self._dir + "\n"
@@ -290,22 +332,31 @@ def getStats(filename):
                 libs.add(name, value)
 
 
+def mergeProjectCSV(csv):
+    title = csv.split('\n', 1)[0]
+    csv = csv.replace(title, "")
+    csv = title + csv
+    return os.linesep.join([s for s in csv.splitlines() if s])
 
 
-#files = ["out1.out", 
-#        "out2.out",
-#        "out3.out",
-#        "out4.out",
-#        "out5.out",
-#        "out6.out",
-#        "out7.out"]
+files = ["out1.out", 
+        "out2.out",
+        "out3.out",
+        "out4.out",
+        "out5.out",
+        "out6.out",
+        "out7.out"]
 
-files = ["test.out"]
+#files = ["test.out"]
 
 for f in files:
     getStats(f)
 
 print("Number of Projects: " + str(len(projects)))
 
+hist_csv = ""
 for project in projects:
-    print(project.getStats())
+    #print(project.getStats()[2])
+    hist_csv += project.getStats()[2]
+
+print(mergeProjectCSV(hist_csv))
