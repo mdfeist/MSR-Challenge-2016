@@ -1,4 +1,5 @@
 import sys
+from sets import Set
 
 projects = []
 
@@ -19,6 +20,50 @@ class Project:
     def getCommits(self):
         return self._commits
 
+    def getStats(self):
+        output = self._dir
+
+        libs = Set()
+        author_names = Set()
+        authors = {}
+
+        # Get authors and libs used in project
+        for commit in self._commits:
+            author = commit.getAuthor()
+            author_names.add(author)
+
+            for f in commit.getFiles():
+                for lib in f.getLibs().getHist():
+                    libs.add(lib)
+
+        for author in author_names:
+            authors[author] = Author()
+            authors[author].setName(author)
+
+            author_libs = authors[author].getLibs()
+
+            for lib in libs:
+                author_libs.add(lib, 0)
+
+        for commit in self._commits:
+            name = commit.getAuthor()
+            author = authors[name]
+
+            for f in commit.getFiles():
+                for hist, count in f.getHistogram().getHist().items():
+                    author.getHistogram().add(hist, count)
+                for lib, count in f.getLibs().getHist().items():
+                    author.getLibs().add(lib, count)
+
+        for key, author in authors.items():
+            output += author.toStr("\t")
+
+
+        return output
+
+        #print(libs)
+
+
     def __str__(self):
         output = self._dir + "\n"
         output += "Number of Commits: " + str(len(self._commits)) + "\n"
@@ -27,6 +72,38 @@ class Project:
             output += commit.toStr("\t")
 
         return output
+    
+    def __repr__(self):
+        return self.__str__()
+
+class Author:
+    def __init__(self):
+        self._name = ""
+        self._hist = Histogram()
+        self._libs = Histogram()
+
+    def setName(self, name):
+        self._name = name
+
+    def getName(self):
+        return self._name
+
+    def getHistogram(self):
+        return self._hist
+
+    def getLibs(self):
+        return self._libs
+
+    def toStr(self, tab):
+        output = tab + "Author: " + self._name + "\n"
+        output += self._hist.toStr(tab + "\t")
+        output += "\n"
+        output += self._libs.toStr(tab + "\t")
+
+        return output
+
+    def __str__(self):
+        return self.toStr("")
     
     def __repr__(self):
         return self.__str__()
@@ -80,7 +157,7 @@ class File:
     def __init__(self):
         self._local = ""
         self._remote = ""
-        self._libs = {}
+        self._libs = Histogram()
         self._hist = Histogram()
 
     def setLocal(self, name):
@@ -98,15 +175,6 @@ class File:
     def getHistogram(self):
         return self._hist
 
-    def addLib(self, name, value):
-        if name in self._libs:
-            self._libs[name] += value
-        else:
-            self._libs[name] = value
-
-    def getLib(self, name):
-        return self._libs[name]
-
     def getLibs(self):
         return self._libs
 
@@ -115,9 +183,7 @@ class File:
         output += tab + "Remote File: " + self._remote + "\n"
 
         output += self._hist.toStr(tab + "\t")
-
-        for key, value in self._libs.iteritems():
-            output += tab + "\t" + key + ": " + str(value) + "\n"
+        output += self._libs.toStr(tab + "\t")
 
         return output
 
@@ -196,7 +262,7 @@ def getStats(filename):
                 name = line.split("|")[1].replace('\n','').strip()
                 current_file.setRemote(name)
             if ("#STATS_END" in line):
-                print(current_file)
+                #print(current_file)
                 current_commit.addFile(current_file)
             if ("#HISTOGRAM" in line):
                 if not hist_has_titles:
@@ -217,23 +283,29 @@ def getStats(filename):
                     hist_has_titles = False
                     hist_tmp_titles = []
             if ("#LIB" in line):
+                libs = current_file.getLibs()
                 split_str = line.split("|")
                 name = split_str[1].strip()
                 value = int(split_str[2].strip())
-                current_file.addLib(name, value)
+                libs.add(name, value)
 
 
 
 
-files = ["out1.out", 
-        "out2.out",
-        "out3.out",
-        "out4.out",
-        "out5.out",
-        "out6.out",
-        "out7.out"]
+#files = ["out1.out", 
+#        "out2.out",
+#        "out3.out",
+#        "out4.out",
+#        "out5.out",
+#        "out6.out",
+#        "out7.out"]
+
+files = ["test.out"]
 
 for f in files:
     getStats(f)
 
 print("Number of Projects: " + str(len(projects)))
+
+for project in projects:
+    print(project.getStats())
