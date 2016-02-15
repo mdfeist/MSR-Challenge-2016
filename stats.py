@@ -26,7 +26,7 @@ class Project:
         histogram_csv = "Project, Author, Do, For, Inheritance, Generic, Try, Catch, While, ForEach, Interface, Class, If, \n"
         histogram_stats_csv = "Project, Author, Generic, Catch/Try, Try/If, Inheritance/Class, Interface/Class, \n"
         libs_csv = ""
-        libs_stats_csv = "" 
+        libs_stats_csv = "Project, Author, Percent of Libs Used, \n"
         libs = Set()
         author_names = Set()
         authors = {}
@@ -105,12 +105,40 @@ class Project:
             histogram_csv += "\n"
             histogram_stats_csv += "\n"
 
-            #if libs_csv == "":
+            # Libs
+            libs_hist = author.getLibs().getHist()
 
+            if libs_csv == "":
+                libs_csv += "Project, Author, "
+                for name in libs_hist:
+                    libs_csv += name + ", "
+
+                libs_csv += "\n"
+
+            if len(libs_hist) > 0:
+                libs_csv += self._dir + ", " + author.getName() + ", "
+                libs_stats_csv += self._dir + ", " + author.getName() + ", "
+
+                count = 0
+                total = 0
+                touched = 0
+                for value in libs_hist.itervalues():
+                    libs_csv += str(value) + ", "
+
+                    if value > 0:
+                        touched += 1
+                    count += 1
+
+                    total += value
+
+                libs_stats_csv += str((100.0*touched)/float(count)) + ", "
+
+                libs_csv += "\n"
+                libs_stats_csv += "\n"
 
         #Libs
 
-        return (dump, histogram_csv, histogram_stats_csv)
+        return (dump, histogram_csv, histogram_stats_csv, libs_csv, libs_stats_csv)
 
     def __str__(self):
         output = self._dir + "\n"
@@ -309,6 +337,9 @@ def getStats(filename):
             if ("#FILE2" in line):
                 name = line.split("|")[1].replace('\n','').strip()
                 current_file.setRemote(name)
+            if ("#STATS_START" in line):
+                hist_has_titles = False
+                hist_tmp_titles = []
             if ("#STATS_END" in line):
                 #print(current_file)
                 current_commit.addFile(current_file)
@@ -364,16 +395,27 @@ print("Gathering Stats ...")
 dump_file = open('dump.out', 'w')
 hist_file = open('histogram.csv', 'w')
 hist_stats_file = open('histogram_stats.csv', 'w')
+libs_stats_file = open('libs_stats.csv', 'w')
 
 hist_csv = ""
 hist_stats_csv = ""
+
+libs_stats_csv = ""
+
 for project in projects:
     #print(project.getStats()[2])
     stats = project.getStats()
     
     dump_file.write(stats[0])
+
     hist_csv += stats[1]
     hist_stats_csv += stats[2]
 
+    libs_file = open('libsOutput/' + project.getDir().replace("/", "") + '.csv', 'w')
+    libs_file.write(stats[3])
+
+    libs_stats_csv += stats[4]
+
 hist_file.write(mergeProjectCSV(hist_csv))
 hist_stats_file.write(mergeProjectCSV(hist_stats_csv))
+libs_stats_file.write(mergeProjectCSV(libs_stats_csv))
