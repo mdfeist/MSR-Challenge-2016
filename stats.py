@@ -70,8 +70,8 @@ class Project:
             # Get Histogram and stats
             hist = author.getHistogram().getHist()
 
-            histogram_csv += self._dir + ", " + author.getName() + ", "
-            histogram_stats_csv += self._dir + ", " + author.getName() + ", "
+            histogram_csv += self._dir + ", " + author.getName().replace(",", "") + ", "
+            histogram_stats_csv += self._dir + ", " + author.getName().replace(",", "") + ", "
 
             if len(hist) < 1:
                 histogram_csv += "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,"
@@ -116,8 +116,8 @@ class Project:
                 libs_csv += "\n"
 
             if len(libs_hist) > 0:
-                libs_csv += self._dir + ", " + author.getName() + ", "
-                libs_stats_csv += self._dir + ", " + author.getName() + ", "
+                libs_csv += self._dir + ", " + author.getName().replace(",", "") + ", "
+                libs_stats_csv += self._dir + ", " + author.getName().replace(",", "") + ", "
 
                 count = 0
                 total = 0
