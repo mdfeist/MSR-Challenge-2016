@@ -23,8 +23,10 @@ class Project:
 
     def getStats(self):
         dump = self._dir
-        histogram_csv = "Author, Do, For, Inheritance, Generic, Try, Catch, While, ForEach, Interface, Class, If, \n"
-        histogram_stats_csv = "Author, Generic, Catch/Try, Try/If, Inheritance/Class, Interface/Class, \n"
+        histogram_csv = "Project, Author, Do, For, Inheritance, Generic, Try, Catch, While, ForEach, Interface, Class, If, \n"
+        histogram_stats_csv = "Project, Author, Generic, Catch/Try, Try/If, Inheritance/Class, Interface/Class, \n"
+        libs_csv = ""
+        libs_stats_csv = "" 
         libs = Set()
         author_names = Set()
         authors = {}
@@ -60,7 +62,6 @@ class Project:
                     author.getLibs().add(lib, count)
 
         # Get Stats
-
         # Get dump of authors
         for key, author in authors.items():
             # Get dump for author
@@ -69,8 +70,8 @@ class Project:
             # Get Histogram and stats
             hist = author.getHistogram().getHist()
 
-            histogram_csv += author.getName() + ", "
-            histogram_stats_csv += author.getName() + ", "
+            histogram_csv += self._dir + ", " + author.getName() + ", "
+            histogram_stats_csv += self._dir + ", " + author.getName() + ", "
 
             if len(hist) < 1:
                 histogram_csv += "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,"
@@ -103,6 +104,11 @@ class Project:
 
             histogram_csv += "\n"
             histogram_stats_csv += "\n"
+
+            #if libs_csv == "":
+
+
+        #Libs
 
         return (dump, histogram_csv, histogram_stats_csv)
 
