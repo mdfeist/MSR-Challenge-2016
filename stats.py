@@ -98,9 +98,26 @@ class File:
     def getHistogram(self):
         return self._hist
 
+    def addLib(self, name, value):
+        if name in self._libs:
+            self._libs[name] += value
+        else:
+            self._libs[name] = value
+
+    def getLib(self, name):
+        return self._libs[name]
+
+    def getLibs(self):
+        return self._libs
+
     def toStr(self, tab):
         output = tab + "Local File: " + self._local + "\n"
         output += tab + "Remote File: " + self._remote + "\n"
+
+        output += self._hist.toStr(tab + "\t")
+
+        for key, value in self._libs.iteritems():
+            output += tab + "\t" + key + ": " + str(value) + "\n"
 
         return output
 
@@ -179,7 +196,7 @@ def getStats(filename):
                 name = line.split("|")[1].replace('\n','').strip()
                 current_file.setRemote(name)
             if ("#STATS_END" in line):
-                #print(current_file)
+                print(current_file)
                 current_commit.addFile(current_file)
             if ("#HISTOGRAM" in line):
                 if not hist_has_titles:
@@ -199,6 +216,11 @@ def getStats(filename):
 
                     hist_has_titles = False
                     hist_tmp_titles = []
+            if ("#LIB" in line):
+                split_str = line.split("|")
+                name = split_str[1].strip()
+                value = int(split_str[2].strip())
+                current_file.addLib(name, value)
 
 
 
