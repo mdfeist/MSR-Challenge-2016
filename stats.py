@@ -349,14 +349,25 @@ files = ["out1.out",
 
 #files = ["test.out"]
 
+print("Gathering Dump Data ...")
 for f in files:
     getStats(f)
-
 print("Number of Projects: " + str(len(projects)))
+print("Gathering Stats ...")
+
+dump_file = open('dump.out', 'w')
+hist_file = open('histogram.csv', 'w')
+hist_stats_file = open('histogram_stats.csv', 'w')
 
 hist_csv = ""
+hist_stats_csv = ""
 for project in projects:
     #print(project.getStats()[2])
-    hist_csv += project.getStats()[2]
+    stats = project.getStats()
+    
+    dump_file.write(stats[0])
+    hist_csv += stats[1]
+    hist_stats_csv += stats[2]
 
-print(mergeProjectCSV(hist_csv))
+hist_file.write(mergeProjectCSV(hist_csv))
+hist_stats_file.write(mergeProjectCSV(hist_stats_csv))
