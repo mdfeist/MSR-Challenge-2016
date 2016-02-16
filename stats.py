@@ -356,7 +356,12 @@ def getStats(filename):
                     split_str = line.split("|")
                     for i in range(0, len(hist_tmp_titles)):
                         name = hist_tmp_titles[i]
-                        value = int(split_str[i+1].strip())
+                        v = split_str[i+1].strip()
+
+                        if not v.isdigit():
+                            break
+
+                        value = int(v)
                         hist.add(name, value)
 
                     hist_has_titles = False
