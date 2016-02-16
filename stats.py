@@ -26,7 +26,7 @@ class Project:
         histogram_csv = "Project, Author, Do, For, Inheritance, Generic, Try, Catch, While, ForEach, Interface, Class, If, \n"
         histogram_stats_csv = "Project, Author, Generic, Catch/Try, Try/If, Inheritance/Class, Interface/Class, \n"
         libs_csv = ""
-        libs_stats_csv = "Project, Author, Percent of Libs Used, \n"
+        libs_stats_csv = "Project, Author, Percent of Libs Used, Number of Libraries, \n"
         libs = Set()
         author_names = Set()
         authors = {}
@@ -131,7 +131,7 @@ class Project:
 
                     total += value
 
-                libs_stats_csv += str((100.0*touched)/float(count)) + ", "
+                libs_stats_csv += str((100.0*touched)/float(count)) + ", " + str(count) + ", "
 
                 libs_csv += "\n"
                 libs_stats_csv += "\n"

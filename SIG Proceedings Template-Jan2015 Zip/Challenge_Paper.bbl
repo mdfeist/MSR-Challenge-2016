@@ -1,0 +1,15 @@
+\begin{thebibliography}{1}
+
+\bibitem{Dyer-Nguyen-Rajan-Nguyen-13}
+R.~Dyer, H.~A. Nguyen, H.~Rajan, and T.~N. Nguyen.
+\newblock Boa: A language and infrastructure for analyzing ultra-large-scale
+  software repositories.
+\newblock In {\em 35th International Conference on Software Engineering}, ICSE
+  2013, pages 422--431, May 2013.
+
+\bibitem{falleri:hal-01054552}
+J.-R. Falleri, F.~Morandat, X.~Blanc, M.~Martinez, and M.~Monperrus.
+\newblock {Fine-grained and Accurate Source Code Differencing}.
+\newblock In {\em {ASE 2014}}, page 11 p., France, 2014.
+
+\end{thebibliography}
