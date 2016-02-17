@@ -105,6 +105,7 @@ for (i in projects){
 
 X <- c(c50, c60, c70, c80, c90, c100)
 X <- X/length(projects)
+X
 
 jpeg(filename="lib_stats_count_authors_percent_per_project.jpg", width = 4, height = 4, units = 'in', res = 600)
 plot(c(50, 60, 70, 80, 90, 100), X, type="l", col="blue",
