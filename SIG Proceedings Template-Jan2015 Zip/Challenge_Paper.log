@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2016.2.16)  16 FEB 2016 22:16
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2016.2.16)  16 FEB 2016 23:50
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -328,16 +328,19 @@ File: omsaer.fd 1999/12/27
 LaTeX Font Info:    Font shape `OMS/aer/m/n' in size <9> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 187.
 
-Underfull \hbox (badness 10000) in paragraph at lines 201--204
+Underfull \hbox (badness 10000) in paragraph at lines 204--207
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 201--204
+Underfull \hbox (badness 10000) in paragraph at lines 204--207
 
  []
 
-[1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
 
 ]
@@ -346,15 +349,18 @@ File: ../lib_stats_number_of_libraries_dist.jpg Graphic file (type jpg)
 
 <use ../lib_stats_number_of_libraries_dist.jpg>
 Package pdftex.def Info: ../lib_stats_number_of_libraries_dist.jpg used on inpu
-t line 230.
+t line 233.
 (pdftex.def)             Requested size: 216.80946pt x 216.80946pt.
 
 <../lib_stats_dist.jpg, id=18, 289.08pt x 289.08pt>
 File: ../lib_stats_dist.jpg Graphic file (type jpg)
 
 <use ../lib_stats_dist.jpg>
-Package pdftex.def Info: ../lib_stats_dist.jpg used on input line 237.
+Package pdftex.def Info: ../lib_stats_dist.jpg used on input line 240.
 (pdftex.def)             Requested size: 216.80946pt x 216.80946pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
  [2 <../lib_stats_number_of_libraries_dist.jpg>]
 <../lib_stats_count_authors_percent_per_project.jpg, id=22, 289.08pt x 289.08pt
 >
@@ -362,7 +368,7 @@ File: ../lib_stats_count_authors_percent_per_project.jpg Graphic file (type jpg
 )
  <use ../lib_stats_count_authors_percent_per_project.jpg>
 Package pdftex.def Info: ../lib_stats_count_authors_percent_per_project.jpg use
-d on input line 261.
+d on input line 264.
 (pdftex.def)             Requested size: 216.80946pt x 216.80946pt.
 
 <../lib_stats_Threshold50_dist.jpg, id=23, 289.08pt x 289.08pt>
@@ -370,7 +376,7 @@ File: ../lib_stats_Threshold50_dist.jpg Graphic file (type jpg)
 
 <use ../lib_stats_Threshold50_dist.jpg>
 Package pdftex.def Info: ../lib_stats_Threshold50_dist.jpg used on input line 2
-69.
+72.
 (pdftex.def)             Requested size: 216.80946pt x 216.80946pt.
 
 <../lib_stats_Threshold80_dist.jpg, id=24, 289.08pt x 289.08pt>
@@ -378,51 +384,43 @@ File: ../lib_stats_Threshold80_dist.jpg Graphic file (type jpg)
 
 <use ../lib_stats_Threshold80_dist.jpg>
 Package pdftex.def Info: ../lib_stats_Threshold80_dist.jpg used on input line 2
-76.
+79.
 (pdftex.def)             Requested size: 216.80946pt x 216.80946pt.
 
-Overfull \hbox (3.7061pt too wide) in paragraph at lines 284--284
+Overfull \hbox (3.7061pt too wide) in paragraph at lines 287--287
 []\secfnt RQ1: Do de-vel-op-ers stick to the same types
  []
 
 
-Overfull \hbox (6.43034pt too wide) in paragraph at lines 287--287
+Overfull \hbox (6.43034pt too wide) in paragraph at lines 290--290
 []\secfnt RQ2: How many de-vel-op-ers in each project
  []
 
 [3 <../lib_stats_dist.jpg> <../lib_stats_count_authors_percent_per_project.jpg>
-] (./Challenge_Paper.bbl
-Underfull \vbox (badness 1097) has occurred while \output is active []
+] (./Challenge_Paper.bbl [4 <../lib_stats_Threshold50_dist.jpg> <../lib_stats_T
+hreshold80_dist.jpg>]) [5
 
- [4 <../lib_stats_Threshold50_dist.jpg> <../lib_stats_Threshold80_dist.jpg>]) [
-5
-
-]
-(./Challenge_Paper.aux)
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
- ) 
+] (./Challenge_Paper.aux) ) 
 Here is how much of TeX's memory you used:
  3242 strings out of 493304
  42355 string characters out of 6139871
- 115664 words of memory out of 5000000
+ 114664 words of memory out of 5000000
  6591 multiletter control sequences out of 15000+600000
  54972 words of font info for 77 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
  41i,10n,35p,1007b,466s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
-e/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/share/texlive/texmf
--dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fo
-nts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type
-1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/publi
-c/amsfonts/cm/cmsy9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfo
-nts/cm/cmti9.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvb8a
-.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/s
-hare/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/te
-xmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/
-type1/urw/times/utmri8a.pfb>
-Output written on Challenge_Paper.pdf (5 pages, 1260067 bytes).
+{/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/
+8r.enc}</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb>
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/sh
+are/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texl
+ive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/share/texlive/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/share/texlive/texmf-dist/fonts/
+type1/urw/helvetic/uhvb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/he
+lvetic/uhvr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.p
+fb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/
+texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on Challenge_Paper.pdf (5 pages, 1252219 bytes).
 PDF statistics:
  70 PDF objects out of 1000 (max. 8388607)
  46 compressed objects within 1 object stream

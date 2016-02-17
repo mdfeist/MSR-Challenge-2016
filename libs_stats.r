@@ -12,7 +12,8 @@ plot(d,
 	main="Density of Authors Versus Percent\nof Types Modified or Added", 
 	xlab='Percent of Types Modified or Added by Author', 
 	ylab='Density of Authors', cex.main=0.75, cex.lab=0.75)
-polygon(d, border="blue")
+lines(d, col="blue") 
+# polygon(d, border="blue")
 dev.off()
 
 Counts <- c()
@@ -20,8 +21,8 @@ Threshold50 <- c()
 Threshold80 <- c()
 for (i in csv$Project){
     Counts <- c(Counts, sum(csv$Project == i))
-    Threshold50 <- c(Threshold50, sum(csv[which(csv$Project == i), 3] > 50.0))
-    Threshold80 <- c(Threshold80, sum(csv[which(csv$Project == i), 3] > 80.0))
+    Threshold50 <- c(Threshold50, sum(csv[which(csv$Project == i), 3] >= 50.0))
+    Threshold80 <- c(Threshold80, sum(csv[which(csv$Project == i), 3] >= 80.0))
 }
 
 csv[, "Authors.Per.Project"] <- Counts
@@ -29,6 +30,7 @@ csv[, "Threshold50"] <- Threshold50
 csv[, "Threshold80"] <- Threshold80
 
 dd <- csv[!duplicated( csv[ , 1 ] ),]
+sum(dd$Authors.Per.Project)
 summary(dd$Authors.Per.Project)
 summary(dd$Threshold50)
 summary(dd$Threshold80)
@@ -40,7 +42,8 @@ plot(d,
 	main="Number of Authors per Project that Modified or Added\n over 50% of Types Used in Project", 
 	xlab='Number of Authors', 
 	ylab='Density of Projects', cex.main=0.75, cex.lab=0.75)
-polygon(d, border="blue")
+lines(d, col="blue") 
+#polygon(d, border="blue")
 axis(side=1, at=c(0, 1, 2, 3, 4, 5, 6, 7, 8))
 dev.off()
 
@@ -51,7 +54,8 @@ plot(d,
 	main="Number of Authors per Project that Modified or Added\n over 80% of Types Used in Project", 
 	xlab='Number of Authors', 
 	ylab='Density of Projects', cex.main=0.75, cex.lab=0.75)
-polygon(d, border="blue")
+lines(d, col="blue") 
+# polygon(d, border="blue")
 axis(side=1, at=c(0, 1, 2, 3, 4, 5, 6))
 dev.off()
 
@@ -104,7 +108,7 @@ for (i in projects){
 }
 
 X <- c(c50, c60, c70, c80, c90, c100)
-X <- X/length(projects)
+X <- 100*X/length(projects)
 X
 
 jpeg(filename="lib_stats_count_authors_percent_per_project.jpg", width = 4, height = 4, units = 'in', res = 600)

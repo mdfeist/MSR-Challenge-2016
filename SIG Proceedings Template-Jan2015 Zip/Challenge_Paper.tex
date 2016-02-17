@@ -77,7 +77,7 @@
 %\crdata{0-12345-67-8/90/01}  % Allows default copyright data (0-89791-88-6/97/05) to be over-ridden - IF NEED BE.
 % --- End of Author Metadata ---
 
-\title{Measuring Project Exposure Using Types used in a Java Project\titlenote{For use with
+\title{Measuring Project Exposure Using Types Used in a Java Project\titlenote{For use with
 SIG-ALTERNATE.CLS. Supported by ACM.}}
 %\subtitle{[Extended Abstract]
 %\titlenote{A full version of this paper is available as
@@ -193,8 +193,11 @@ A Java project contains many different types which are defined by the language, 
 
 \section{Introduction}
 From analysing open source software repositories, it can be seen that most contributors make few changes and only touch a small part of the program. The majority of the changes come from a set of core developers. There are also many more people watching repositories than actually contributing to them. Increasing the activity level and encouraging aspiring developers would be beneficial to the overall health of the repository \cite{Patrick:Wagstrom:2012}. 
+
 An active developer might make changes to all areas of a repository or focus on a specific part. There are some metrics for measuring the contributions of a developer to a project, but these do not measure how much of the project a developer has been exposed to and instead measures the size of their contribution \cite{KGSP09}. The number of files added and lines of code contributed by an author are not a good metric since the total number is heavily affected by other developers. We propose that if a developer has used most of the different types present in a project, they have likely seen most parts of it. Since most tasks can be completed while only using a small subset of these types, this does not measure the size of their contribution but rather the exposure to the entire scope of the project. 
+
 In Java, a type can be a primitive type or an object reference. Primitive types are those that are built into the language such as an int or char. Object references are classes that have been defined in the project or through an included library. Different types and libraries are used in different parts of a program. When writing or contributing, the author's choice of which part of the program to edit will in turn affects what types they end up using or editing. 
+
 The number of types a programmer uses could depend on the level of of experience with a language or the size and scope of the project. When collaborating on open source software, there is the extra considerations of how a developer's contributions mesh with those of their collaborators. Developers typically have a role in development process that is defined by the project, their collaborators and their experience level \cite{Patrick:Wagstrom:2012}. A programmer may choose to stay within their comfort areas and not contribute certain features or leave features to be developed by others. As a developer's experience with a project increases they may be more inclined to use more types.
 We can learn about the types developers are using by examining each revision and finding the types which are being used by the developer making the revision.
 
@@ -228,19 +231,19 @@ These studies look at the usage of language features, APIs and object oriented s
 \begin{figure}[t]
 \centering
 \includegraphics[height=3in, width=3in]{../lib_stats_number_of_libraries_dist}
-\caption{Histogram showing the number of different types declared in a project.}
+\caption{Shows how many different types are present in each project.}
 \label{lib_stats_number_of_libraries_dist}
 \end{figure}
 
 \begin{figure}[t]
 \centering
 \includegraphics[height=3in, width=3in]{../lib_stats_dist}
-\caption{A sample black and white graphic.}
+\caption{The distribution of authors by their coverage level.}
 \label{lib_stats_dist}
 \end{figure}
 
 \section{Methodology}
-\subsection{Metric}
+\subsection{Metrics}
 In order to measure the amount of different areas that a developer has contributed to, or covered, we will be using the number of types they have used out of the total number present in the repository. Therefore, the coverage of a project is what percent of the total types did a developer add or make a change change to at least one time. This includes the Java static types, other Java objects in the repository and all objects added from libraries. If a developer has used every library involved in the project, they have likely seen every part of it. Even if they are not editing every file, a developer with full coverage would have knowledge of all types being used in that file. 
 
 An Abstract Syntax Tree (AST) is a tree structure which represents a piece of code by breaking its syntactic constructs into a tree structure. Each node in the tree represents a syntactically valid chunk of code which can be contained in a parent node or broken up into child nodes with the leaves of the tree being terminal elements. This captures the structure of the code in an abstract manner. When a change is made to a file, the difference will also appear in the AST. This means that the AST of revisions in code repositories can be compared to see what structures a developer is touching. 
@@ -267,14 +270,14 @@ To determine what types in a project an author declared we looked at all revisio
 \begin{figure}[t]
 \centering
 \includegraphics[height=3in, width=3in]{../lib_stats_Threshold50_dist}
-\caption{A sample black and white graphic.}
+\caption{Shows how common developers with above 50\% coverage levels are in a project.}
 \label{lib_stats_Threshold50_dist}
 \end{figure}
 
 \begin{figure}[t]
 \centering
 \includegraphics[height=3in, width=3in]{../lib_stats_Threshold80_dist}
-\caption{A sample black and white graphic.}
+\caption{Shows how common developers with above 80\% coverage levels are in a project.}
 \label{lib_stats_Threshold80_dist}
 \end{figure}
 
@@ -282,23 +285,26 @@ To determine what types in a project an author declared we looked at all revisio
 We found that more than half of the projects used less than 250 different types but there were a few projects that used thousands of different types. The number of types were distributed in a power-law-like fashion.
 
 \subsection{RQ1: Do developers stick to the same types in a project?}
-We found that the majority of developers declare less than 30\% of the types declared in the project. With a small group declaring more than 80\% of the types. This is shown in Figure \ref{lib_stats_dist}.
+We found that among the total of 3334 developers the majority cover less than 30\% of the types declared in the project they contribute to. With a small group covering more than 80\% of the types. Interestingly, there were many developers who did not make any type declarations and only made changes to other parts of Java files. There were also very few developers who had a coverage level between 30\% and 80\%, suggesting that there were not many developers with only moderate involvement in a repository. They either stuck to a small portion of types or utilized nearly all of them. This is shown in Figure \ref{lib_stats_dist}.
 
 \subsection{RQ2: How many developers in each project had large coverages?}
 We found that on average a project has about 7 authors. In these projects on average only two developers modified or added over 50\% of the types used in the project. Furthermore on average only one developer modified or added over 80\% of the types. This is shown if Figures \ref{lib_stats_Threshold50_dist} and \ref{lib_stats_Threshold80_dist} respectively. 
 
+Looking at Figure \ref{lib_stats_count_authors_percent_per_project} we can see that approximately 70\% of the projects have at least one developer who has modified or added over 90\% of the types used in a project. We found that all projects have at least one developer that modified or added over 50\% of the types. The highest number of developers on a project was 347 but the max number of developers with 50\% or more coverage was only 8. This means no large projects had many developers who had covered all types.
 
-Looking at Figure \ref{lib_stats_count_authors_percent_per_project} we can see that approximately 70\% of the projects have at least one developer who has modified or added over 90\% of the types used in a project. Furthermore all projects have at least one developer that modified or added over 50\% of the types.
+\subsection{Discussion}
+If developers were able to see their coverage level when contributing to a repository, it would make them more aware of the parts of the project that they had not touched. This could encourage them to fix bugs, add features or make changes to new areas in order to increase their coverage level. This could also provide developers with lower activity to contribute more to a project to distinguish themselves. When coverage rate drops, it would also make the developer more aware of new types and changes in the repository that may have gone unnoticed without such a metric.
 
 \subsection{Threats to Validity}
-Threats to the validity of this project include threats of construct and external validity. Discriminant threats to construct validity include projects that had many files that were not Java source files such as HTML or Ruby files. These projects might not accurately represent an average Java project or behaviour of Java developers. There were also some authors committed a large number of Java files all at once. This suggests that they may have uploaded a library and did not write the code themselves.
+Threats to the validity of this project include threats of construct and external validity. Discriminant threats to construct validity include projects that had many files that were not Java source files such as HTML or Ruby files. These projects might not accurately represent an average Java project or behaviour of Java developers. There were also some authors committed a large number of Java files all at once. This suggests that they may have uploaded a library and did not write the code themselves. Git settings allow for a user to set a name which is used in the revision info. This means that multiple users in the stats could be the same author under different names. This usually happens when the author uses multiple computers.
 
 External threats to validity include sampling exclusively from the September GitHub dataset and the possibility that there could be large projects that only use a few types however uncommon they may be.
 
 \section{Conclusions and Future Work}
-In this paper we investigated the number of types used in Java project and the number of them used by each developer. In the data provided for AQ1, we found that most developers only ever use a small percentage of the total number of types in a project. Developers are specializing and not using all the types present in a project. For AQ2 we found that most repositories had at least a few developers with high coverage levels. Having a large number of developers with high coverage was very uncommon.
+In this paper we investigated the number of types used in Java project and the number of them used by each developer. In the data provided for AQ1, we found that most developers only ever use a small percentage of the total number of types in a project. Developers do stick to the same types and are often not using many of the types present in a project. For AQ2 we found that most repositories had at least a few developers with high coverage levels. Having a large number of developers with high coverage was very uncommon.
 
-There are many more questions that can be answered using AST diffs as well as looking at type coverage. AST diffs could be used to look at more structural differences between code revisions. The number of other language features used by the developers could be counted to see how much of the Java language they use and what they don’t know.
+There are many more questions that can be answered using AST diffs as well as looking at type coverage. AST diffs could be used to look at more structural differences between code revisions. The number of other language features used by the developers could be counted to see how much of the Java language they use and what they do not know.
+
 The type coverage of a developer could be weighted against the number of bugs they commit, which could indicate that a developer has gone too far out of their expertise level. ASTs could be used to find what structure the bugs were committed in to help the developer identify their weak areas. A study could also be done if developers react positively to knowing their coverage rate in a repository.
 
 %\end{document}  % This is where a 'short' article might terminate
