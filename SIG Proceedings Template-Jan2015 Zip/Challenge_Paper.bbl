@@ -70,6 +70,12 @@ C.~Parnin, C.~Bird, and E.~Murphy-Hill.
 \newblock In {\em Proceedings of the 8th Working Conference on Mining Software
   Repositories}, MSR '11, pages 3--12, New York, NY, USA, 2011. ACM.
 
+\bibitem{pawlak:hal-01169705}
+R.~Pawlak, M.~Monperrus, N.~Petitprez, C.~Noguera, and L.~Seinturier.
+\newblock Spoon: A library for implementing analyses and transformations of
+  java source code.
+\newblock {\em Software: Practice and Experience}, page~na, 2015.
+
 \bibitem{Patrick:Wagstrom:2012}
 S.~Wagstrom, Jergensen.
 \newblock {\em Roles in a Networked Software Development Ecosystem: A Case

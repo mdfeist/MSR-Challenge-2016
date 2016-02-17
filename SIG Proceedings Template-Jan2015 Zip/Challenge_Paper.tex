@@ -109,7 +109,7 @@ SIG-ALTERNATE.CLS. Supported by ACM.}}
 % without further effort on your part as the last section in
 % the body of your article BEFORE References or any Appendices.
 
-\numberofauthors{8} %  in this sample file, there are a *total*
+\numberofauthors{3} %  in this sample file, there are a *total*
 % of EIGHT authors. SIX appear on the 'first-page' (for formatting
 % reasons) and the remaining two appear in the \additionalauthors section.
 %
@@ -127,20 +127,25 @@ SIG-ALTERNATE.CLS. Supported by ACM.}}
 % 1st. author
 \alignauthor
 Michael Feist\\
-       \affaddr{University of Alberta}\\
-       \email{mdfeist@ualberta.ca}
+	\affaddr{Department of Computing Science}\\
+    \affaddr{University of Alberta}\\
+    \affaddr{Edmonton, Canada}\\
+    \email{mdfeist@ualberta.ca}
 % 2nd. author
 \alignauthor
 Ian Watts\\
-       \affaddr{University of Alberta}\\
-       \email{watts@ualberta.ca}
+	\affaddr{Department of Computing Science}\\
+    \affaddr{University of Alberta}\\
+    \affaddr{Edmonton, Canada}\\
+    \email{watts@ualberta.ca}
 % 3rd. author
 % Leaving this here in case we need to include Abram Hindle
-\alignauthor Lars Th{\o}rv{\"a}ld\\
-       \affaddr{The Th{\o}rv{\"a}ld Group}\\
-       \affaddr{1 Th{\o}rv{\"a}ld Circle}\\
-       \affaddr{Hekla, Iceland}\\
-       \email{larst@affiliation.org}
+\alignauthor
+Abram Hindle\\
+	\affaddr{Department of Computing Science}\\
+    \affaddr{University of Alberta}\\
+    \affaddr{Edmonton, Canada}\\
+    \email{hindle1@ualberta.ca}
 \and  % use '\and' if you need 'another row' of author names
 }
 
@@ -220,19 +225,6 @@ L\"{a}mmel \textit{et al.} \cite{Lammel:2011:LAA:1982185.1982471} used ASTs to e
 
 These studies look at the usage of language features, APIs and object oriented structures but did not look at the types used in Java projects.
 
-
-\section{Methodology}
-\subsection{Metric}
-
-\subsection{Data Set}
-Our data set consists of 216 Github repositories. To ensure that we only look at Java repositories of reasonable size we first queried BOA \cite{Dyer-Nguyen-Rajan-Nguyen-13} for eligible repositories. We ran our BOA query over the 2015 Github September dataset. The criteria for a repository to be accept was that it include at least 10 Java files, 3 different committers, 30 commits, and at least one commit from after 2014. This allowed us to narrow our search down to sizable Java projects that were recently active. Out of the possible repositories returned from BOA we randomly chose the 216 repositories and pulled them from Github.
-
-\subsection{Approach}
-To determine what types in a project an author declared we looked at all revisions in each of the 216 Github repositories. Using the Gumtree algorithm with Spoon \cite{falleri:hal-01054552} we were able to generate ASTs for each of the differences between the revisions. Next we only looked at additions and modifications as deletions do not necessarily show that an author is using that type. We then counted the number of times a type is declared in the ASTs. By adding up the types used by each author in a given project we were able to determine the total number of types used in each project. This then allowed us to calculate the percent of types an author modified or added compared to the total number of types in a project.
-
-\section{Analysis and Findings}
-We found that more than half of the projects used less than 250 different types. But there were a few projects that used thousands of different types.
-
 \begin{figure}[t]
 \centering
 \includegraphics[height=3in, width=3in]{../lib_stats_number_of_libraries_dist}
@@ -240,48 +232,79 @@ We found that more than half of the projects used less than 250 different types.
 \label{lib_stats_number_of_libraries_dist}
 \end{figure}
 
-\subsection{RQ1: Do developers stick to the same types in a project?}
-We found that the majority of developers declare less than 30\% of the types declared in the project. With a small group declaring more than 80\% of the types. This is shown in Figure \ref{lib_stats_dist}.
-
-\begin{figure}[ht]
+\begin{figure}[t]
 \centering
 \includegraphics[height=3in, width=3in]{../lib_stats_dist}
 \caption{A sample black and white graphic.}
 \label{lib_stats_dist}
 \end{figure}
 
-\subsection{RQ2: How many developers in each project had large coverages?}
-We found that on average a project has about 7 authors. In these projects on average only two developers modified or added over 50\% of the types used in the project. Furthermore on average only one developer modified or added over 80\% of the types. This is shown if Figures \ref{lib_stats_Threshold50_dist} and \ref{lib_stats_Threshold80_dist} respectively.
+\section{Methodology}
+\subsection{Metric}
+In order to measure the amount of different areas that a developer has contributed to, or covered, we will be using the number of types they have used out of the total number present in the repository. Therefore, the coverage of a project is what percent of the total types did a developer add or make a change change to at least one time. This includes the Java static types, other Java objects in the repository and all objects added from libraries. If a developer has used every library involved in the project, they have likely seen every part of it. Even if they are not editing every file, a developer with full coverage would have knowledge of all types being used in that file. 
 
-\begin{figure}[ht]
-\centering
-\includegraphics[height=3in, width=3in]{../lib_stats_Threshold50_dist}
-\caption{A sample black and white graphic.}
-\label{lib_stats_Threshold50_dist}
-\end{figure}
+An Abstract Syntax Tree (AST) is a tree structure which represents a piece of code by breaking its syntactic constructs into a tree structure. Each node in the tree represents a syntactically valid chunk of code which can be contained in a parent node or broken up into child nodes with the leaves of the tree being terminal elements. This captures the structure of the code in an abstract manner. When a change is made to a file, the difference will also appear in the AST. This means that the AST of revisions in code repositories can be compared to see what structures a developer is touching. 
 
-\begin{figure}[ht]
-\centering
-\includegraphics[height=3in, width=3in]{../lib_stats_Threshold80_dist}
-\caption{A sample black and white graphic.}
-\label{lib_stats_Threshold80_dist}
-\end{figure}
+\subsection{Data Set}
+Our data set consists of 216 Github repositories. To ensure that we only looked at Java repositories of reasonable size, we first queried BOA \cite{Dyer-Nguyen-Rajan-Nguyen-13} for eligible repositories. We ran our query on the 2015 Github September dataset. The criteria for a repository to be accept was that it included at least 10 Java files, 3 different committers, 30 commits, and at least one commit from after 2014. 22475 repositories fit the criteria. This allowed us to narrow our search down to sizable Java projects that were recently active. Out of the possible repositories returned from BOA we randomly chose the 216 repositories and pulled them from Github.
 
-Looking at Figure \ref{lib_stats_count_authors_percent_per_project} we can see that approximately 70\% of the projects have at least one developer who has modified or added over 90\% of the types used in a project. Furthermore all projects have at least one developer that modified or added over 50\% of the types.
+\subsection{Tools}
+The ASTs were generated using Spoon \cite{pawlak:hal-01169705}. Spoon is a tool for transforming and analysing Java source code. It breaks code up into a meta-model such as an AST. The model consists of three parts: structural elements, code elements and references to program elements. The Spoon model is convenient because it provides the structure for performing an AST diff while retaining the code elements for analysis afterwards. Spoon also preserves all type and library information, which is what we were interested in.
 
+GumTree \cite{falleri:hal-01054552} is a library which is used to compute the difference between two ASTs generated by Spoon. Gumtree does not handle empty files by default, so in order to compare new files we had to modify Gumtree to consider a new file as an empty AST.
 
-\begin{figure}[ht]
+\subsection{Approach}
+To determine what types in a project an author declared we looked at all revisions in each of the 216 Github repositories. Using the Gumtree algorithm with Spoon, we were able to generate ASTs for each of the differences between the revisions. Next we only looked at additions and modifications as deletions do not necessarily show that an author is using that type. We then counted the number of times a type is declared in the ASTs. By adding up the types used by each author in a given project we were able to determine the total number of types used in each project. This then allowed us to calculate the percent of types an author modified or added compared to the total number of types in a project.
+
+\begin{figure}[t]
 \centering
 \includegraphics[height=3in, width=3in]{../lib_stats_count_authors_percent_per_project}
 \caption{A sample black and white graphic.}
 \label{lib_stats_count_authors_percent_per_project}
 \end{figure}
 
+
+\begin{figure}[t]
+\centering
+\includegraphics[height=3in, width=3in]{../lib_stats_Threshold50_dist}
+\caption{A sample black and white graphic.}
+\label{lib_stats_Threshold50_dist}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[height=3in, width=3in]{../lib_stats_Threshold80_dist}
+\caption{A sample black and white graphic.}
+\label{lib_stats_Threshold80_dist}
+\end{figure}
+
+\section{Analysis and Findings}
+We found that more than half of the projects used less than 250 different types but there were a few projects that used thousands of different types. The number of types were distributed in a power-law-like fashion.
+
+\subsection{RQ1: Do developers stick to the same types in a project?}
+We found that the majority of developers declare less than 30\% of the types declared in the project. With a small group declaring more than 80\% of the types. This is shown in Figure \ref{lib_stats_dist}.
+
+\subsection{RQ2: How many developers in each project had large coverages?}
+We found that on average a project has about 7 authors. In these projects on average only two developers modified or added over 50\% of the types used in the project. Furthermore on average only one developer modified or added over 80\% of the types. This is shown if Figures \ref{lib_stats_Threshold50_dist} and \ref{lib_stats_Threshold80_dist} respectively. 
+
+
+Looking at Figure \ref{lib_stats_count_authors_percent_per_project} we can see that approximately 70\% of the projects have at least one developer who has modified or added over 90\% of the types used in a project. Furthermore all projects have at least one developer that modified or added over 50\% of the types.
+
+\subsection{Threats to Validity}
+Threats to the validity of this project include threats of construct and external validity. Discriminant threats to construct validity include projects that had many files that were not Java source files such as HTML or Ruby files. These projects might not accurately represent an average Java project or behaviour of Java developers. There were also some authors committed a large number of Java files all at once. This suggests that they may have uploaded a library and did not write the code themselves.
+
+External threats to validity include sampling exclusively from the September GitHub dataset and the possibility that there could be large projects that only use a few types however uncommon they may be.
+
 \section{Conclusions and Future Work}
+In this paper we investigated the number of types used in Java project and the number of them used by each developer. In the data provided for AQ1, we found that most developers only ever use a small percentage of the total number of types in a project. Developers are specializing and not using all the types present in a project. For AQ2 we found that most repositories had at least a few developers with high coverage levels. Having a large number of developers with high coverage was very uncommon.
+
+There are many more questions that can be answered using AST diffs as well as looking at type coverage. AST diffs could be used to look at more structural differences between code revisions. The number of other language features used by the developers could be counted to see how much of the Java language they use and what they don’t know.
+The type coverage of a developer could be weighted against the number of bugs they commit, which could indicate that a developer has gone too far out of their expertise level. ASTs could be used to find what structure the bugs were committed in to help the developer identify their weak areas. A study could also be done if developers react positively to knowing their coverage rate in a repository.
+
 %\end{document}  % This is where a 'short' article might terminate
 
 %ACKNOWLEDGMENTS are optional
-\section{Acknowledgments}
+%\section{Acknowledgments}
 
 %
 % The following two commands are all you need in the
@@ -298,9 +321,9 @@ Looking at Figure \ref{lib_stats_count_authors_percent_per_project} we can see t
 %
 %APPENDICES are optional
 %\balancecolumns
-\appendix
+%\appendix
 %Appendix A
-\section{Headings in Appendices}
+%\section{Headings in Appendices}
 
 %\balancecolumns % GM June 2007
 % That's all folks!
