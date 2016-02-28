@@ -35,28 +35,27 @@ summary(dd$Authors.Per.Project)
 summary(dd$Threshold50)
 summary(dd$Threshold80)
 
-jpeg(filename="lib_stats_Threshold50_dist.jpg", width = 4, height = 4, units = 'in', res = 600)
+jpeg(filename="lib_stats_Threshold_dist.jpg", width = 4, height = 4, units = 'in', res = 600)
 # Filled Density Plot
 d <- density(dd$Threshold50, adjust=2, n=8)
 plot(d,
-	main="Number of Authors per Project that Modified or Added\n over 50% of Types Used in Project", 
-	xlab='Number of Authors', 
+	main="Number of Authors per Project that Modified or Added\n over X% of Types Used in Project", 
+	xlab='Number of Authors',
+	ylim=c(0,0.6),
 	ylab='Density of Projects', cex.main=0.75, cex.lab=0.75)
 lines(d, col="blue") 
+
+d <- density(dd$Threshold80, adjust=2, n=8)
+lines(d, col="red")
+
+legend('topright', # places a legend at the appropriate place 
+c("50%", "80%"), # puts text in the legend
+lty=c(1,1), # gives the legend appropriate symbols (lines)
+lwd=c(2.5,2.5),
+col=c("blue","red"))
+
 #polygon(d, border="blue")
 axis(side=1, at=c(0, 1, 2, 3, 4, 5, 6, 7, 8))
-dev.off()
-
-jpeg(filename="lib_stats_Threshold80_dist.jpg", width = 4, height = 4, units = 'in', res = 600)
-# Filled Density Plot
-d <- density(dd$Threshold80, adjust=2, n=6)
-plot(d,
-	main="Number of Authors per Project that Modified or Added\n over 80% of Types Used in Project", 
-	xlab='Number of Authors', 
-	ylab='Density of Projects', cex.main=0.75, cex.lab=0.75)
-lines(d, col="blue") 
-# polygon(d, border="blue")
-axis(side=1, at=c(0, 1, 2, 3, 4, 5, 6))
 dev.off()
 
 jpeg(filename="lib_stats_number_of_libraries_dist.jpg", width = 4, height = 4, units = 'in', res = 600)
@@ -68,7 +67,8 @@ plot(H$mids,H$counts,type="n",
     xaxt="n",
 	main="Distribution of the Number of Types used in a Project", 
 	xlab='Number of Types used in a Project', 
-	ylab='Number of Projects', cex.main=0.75, cex.lab=0.75)
+	ylab='Number of Projects', 
+	cex.main=0.75, cex.lab=0.75)
 abline(v=breaks,col="lightgrey",lty=2)
 abline(h=pretty(H$counts),col="lightgrey")
 plot(H,add=T,freq=T,col="black")
@@ -125,3 +125,5 @@ row_sub <- apply(csv, 1, function(row) row[3] > 0.001 )
 no_zero_csv <- csv[row_sub,]
 
 summary(no_zero_csv)
+
+csv[which(csv$Project == "eclipse/"), ]

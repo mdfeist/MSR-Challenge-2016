@@ -107,11 +107,13 @@ class Project:
 
             # Libs
             libs_hist = author.getLibs().getHist()
+            libs_set = Set()
 
             if libs_csv == "":
                 libs_csv += "Project, Author, "
                 for name in libs_hist:
                     libs_csv += name + ", "
+                    libs_set.add(name)
 
                 libs_csv += "\n"
 
@@ -138,7 +140,7 @@ class Project:
 
         #Libs
 
-        return (dump, histogram_csv, histogram_stats_csv, libs_csv, libs_stats_csv)
+        return (dump, histogram_csv, histogram_stats_csv, libs_csv, libs_stats_csv, libs_set)
 
     def __str__(self):
         output = self._dir + "\n"
